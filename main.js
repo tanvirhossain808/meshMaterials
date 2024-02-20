@@ -1,9 +1,28 @@
 import "./style.css"
 import gsap from 'gsap';
 import * as THREE from 'three';
+import * as dat from "dat.gui"
+// console.log(dat);
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-const canvas = document.querySelector('canvas.webgl')
-
+const canvas = document.querySelector('canvas.webgl');
+const gui = new dat.GUI();
+const Configuracion = function () {
+    this.color = "#ff0000",
+        this.spin = () => {
+            gsap.to(mesh.rotation, { duration: 1, y: mesh.rotation.y + 10 })
+        }
+}
+const conf = new Configuracion();
+// console.log(conf);
+const parameters = {
+    color: "25500"
+}
+gui.addColor(conf, "color").onChange(function () {
+    mesh.material.color.set(conf.color)
+    // console.log(mesh.material.color.set(conf.color))
+})
+gui.add(conf, 'spin')
+console.log(gui);
 // // import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 const scene = new THREE.Scene();
 /* Cursor */
@@ -40,46 +59,53 @@ window.addEventListener("mousemove", (e) => {
 // const hey = new THREE.Geometry
 // console.log(THREE.Geometr);
 
-const geotmetry = new THREE.BufferGeometry();
-const geotmetry2 = new THREE.BufferGeometry();
+// const geotmetry = new THREE.BufferGeometry();
+// const geotmetry2 = new THREE.BufferGeometry();
 const count = 10;
-const positionArray2 = new Float32Array([
-    -1, -1, 1,
-    1, -1, 1,
-    1, 1, 1,
-    1, 1, 1,
-    -1, 1, 1,
-    -1, -1, 1
-]);
+// const positionArray2 = new Float32Array([
+//     -1, -1, 1,
+//     1, -1, 1,
+//     1, 1, 1,
+//     1, 1, 1,
+//     -1, 1, 1,
+//     -1, -1, 1
+// ]);
 // let count=10
-const postionArray = new Float32Array(count * 300 * 300)
-for (let i = 0; i < count * 3 * 3 * 3; i++) {
-    postionArray[i] = Math.random();
-    // console.log(Math.random() * -.5);
-}
-const postionAttribute2 = new THREE.BufferAttribute(positionArray2, 3);
-const postionAttribute = new THREE.BufferAttribute(postionArray, 3);
-geotmetry2.setAttribute("position", postionAttribute2)
-geotmetry.setAttribute("position", postionAttribute)
+// const postionArray = new Float32Array(count * 300 * 300)
+// for (let i = 0; i < count * 3 * 3 * 3; i++) {
+//     postionArray[i] = Math.random();
+//     // console.log(Math.random() * -.5);
+// }
+// const postionAttribute2 = new THREE.BufferAttribute(positionArray2, 3);
+// const postionAttribute = new THREE.BufferAttribute(postionArray, 3);
+// geotmetry2.setAttribute("position", postionAttribute2)
+// geotmetry.setAttribute("position", postionAttribute)/
 const mesh = new THREE.Mesh(
-    // new THREE.BoxGeometry(1, 1, 1, 2, 1, 1),
-    geotmetry,
+    new THREE.BoxGeometry(1, 1, 1, 2, 1, 1),
 
     new THREE.MeshBasicMaterial({
-        color: 0xff0000,
-        wireframe: true
+        color: conf.color,
+        // wireframe: true
     })
-)
-const mesh2 = new THREE.Mesh(
-    // new THREE.BoxGeometry(1, 1, 1, 2, 1, 1),
-    geotmetry2,
+);
+mesh.visible = false
+gui.add(mesh.position, "y")
+    .max(3)
+    .min(-3)
+    .step(.01)
+    .name("elevation");
 
-    new THREE.MeshBasicMaterial({
-        color: 0xff0000,
-        wireframe: true
-    })
-)
-scene.add(mesh2)
+gui
+    .add(mesh, "visible");
+gui
+    .add(mesh.material, "wireframe")
+// console.log(mesh.material.color)
+
+
+// gui.add(mesh.position, "y", -3, 3, .01)
+// gui.add(mesh.position, "x", -3, 3, .01)
+// gui.add(mesh.position, "z", -3, 3, .01)
+// scene.add(mesh2)
 scene.add(mesh);
 // mesh.position.normalize();
 
