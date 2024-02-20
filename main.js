@@ -41,12 +41,25 @@ window.addEventListener("mousemove", (e) => {
 // console.log(THREE.Geometr);
 
 const geotmetry = new THREE.BufferGeometry();
-const count = 100;
-const positionArray = new Float32Array(count * 3 * 3);
+const geotmetry2 = new THREE.BufferGeometry();
+const count = 10;
+const positionArray2 = new Float32Array([
+    -1, -1, 1,
+    1, -1, 1,
+    1, 1, 1,
+    1, 1, 1,
+    -1, 1, 1,
+    -1, -1, 1
+]);
+// let count=10
+const postionArray = new Float32Array(count * 300 * 300)
 for (let i = 0; i < count * 3 * 3 * 3; i++) {
-    positionArray[i] = Math.random() * -.5;
+    postionArray[i] = Math.random();
+    // console.log(Math.random() * -.5);
 }
-const postionAttribute = new THREE.BufferAttribute(positionArray, 3);
+const postionAttribute2 = new THREE.BufferAttribute(positionArray2, 3);
+const postionAttribute = new THREE.BufferAttribute(postionArray, 3);
+geotmetry2.setAttribute("position", postionAttribute2)
 geotmetry.setAttribute("position", postionAttribute)
 const mesh = new THREE.Mesh(
     // new THREE.BoxGeometry(1, 1, 1, 2, 1, 1),
@@ -57,6 +70,16 @@ const mesh = new THREE.Mesh(
         wireframe: true
     })
 )
+const mesh2 = new THREE.Mesh(
+    // new THREE.BoxGeometry(1, 1, 1, 2, 1, 1),
+    geotmetry2,
+
+    new THREE.MeshBasicMaterial({
+        color: 0xff0000,
+        wireframe: true
+    })
+)
+scene.add(mesh2)
 scene.add(mesh);
 // mesh.position.normalize();
 
