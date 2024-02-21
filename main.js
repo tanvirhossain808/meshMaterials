@@ -2,65 +2,25 @@ import "./style.css"
 import gsap from 'gsap';
 import * as THREE from 'three';
 import * as dat from "dat.gui"
-// import imgcolor from "./static/color.jpg"
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 const canvas = document.querySelector('canvas.webgl');
 const image = new Image();
 
 
-/*
-//behind the scence of the texture loader
-const texture = new THREE.Texture(image);
-image.onload = () => {
-    console.log('hey');
-    texture.needsUpdate = true
-}
-console.log(texture);
-image.src = "./static/images/color.jpg" */
 
-const loadingManager = new THREE.LoadingManager();
-loadingManager.onStart = () => {
-    console.log('onStart')
-}
-loadingManager.onLoad = () => {
-    console.log('onLoaded')
-}
-loadingManager.onProgress = () => {
-    console.log('onProgress')
-}
-loadingManager.onError = () => {
-    console.log('onError')
-}
-const textureleLoader = new THREE.TextureLoader(loadingManager);
-// const colorTexture = textureleLoader.load("./static/images/color.jpg",
-//     () => { console.log('load') },
-//     () => { console.lqg("progress") },
-//     () => { console.log("error") },
-// )
-// const colorTexture = textureleLoader.load("./static/images/color.jpg");
-const colorTexture = textureleLoader.load("./static/images/checkerboard-8x8.png");
-// const colorTexture = textureleLoader.load("./static/images/minecraft.png");
-// const colorTexture = textureleLoader.load("./static/images/checkerboard-1024x1024.png");
-const alphaTexture = textureleLoader.load("./static/images/alpha.jpg");
-const heightTexture = textureleLoader.load("./static/images/height.jpg");
-const normalTexture = textureleLoader.load("./static/images/normal.jpg");
-const ambientOcclusionTexture = textureleLoader.load("./static/images/ambientOcclusion.jpg");
-const metalnessTexture = textureleLoader.load("./static/images/metalness.jpg");
-const roughnessTexture = textureleLoader.load("./static/images/roughness.jpg");
-// colorTexture.repeat.x = 2;
-// colorTexture.repeat.y = 3;
-// colorTexture.wrapS = THREE.RepeatWrapping
-// colorTexture.wrapT = THREE.RepeatWrapping
-// colorTexture.offset.x = 0.5
-// colorTexture.offset.y = .5
-// colorTexture.rotation = Math.PI * .25;
-/* moving the rotaion point to the center */
-// colorTexture.center.x = .5;
+
 // colorTexture.center.y = .5
-colorTexture.generateMipmaps = false;
-colorTexture.minFilter = THREE.NearestFilter
-colorTexture.magFilter = THREE.NearestFilter
 /*  */
+const textureleLoader = new THREE.TextureLoader();
+const doorColorTexture = textureleLoader.load("./door/color.jpg");
+const doorAphaColorTexture = textureleLoader.load("./door/alpha.jpg");
+const doorDmbientOcclusionTexture = textureleLoader.load("./door/ambientOcclusion.jpg");
+const doorHeightTexture = textureleLoader.load("./door/height.jpg");
+const doorNormalTexture = textureleLoader.load("./door/normal.jpg");
+const doorMetalessTexture = textureleLoader.load("./door/metalness.jpg");
+const doorRoughnessTexture = textureleLoader.load("./door/roughness.jpg");
+const matCapTexture = textureleLoader.load("./matcaps/1.png")
+const gradientsTexture = textureleLoader.load("./gradients/3.jpg")
 console.log(image);
 const Configuracion = function () {
     this.color = "#ff0000",
@@ -93,22 +53,36 @@ window.addEventListener("resize", () => {
     renderer.setSize(sizes.width, sizes.height)
 })
 
-
-const mesh = new THREE.Mesh(
-    new THREE.BoxGeometry(1, 1, 1, 2, 1, 1),
-
-    new THREE.MeshBasicMaterial({
-        // color: conf.color,
-        map: colorTexture
-        // wireframe: true
-    })
+const material = new THREE.MeshBasicMaterial({ /* color: 0xff0000 */
+    map: doorColorTexture
+});
+// material.color.set('pink')
+material.alphaMap = doorAphaColorTexture
+// material.side = THREE.DoubleSide
+// material.color = new THREE.Color("orange")
+// material.color = new THREE.Color("green")
+// material.opacity = .5;
+material.transparent = true
+const sphere = new THREE.Mesh(
+    new THREE.SphereGeometry(.5, 16, 16),
+    material
+)
+sphere.position.x = -1.5
+const plane = new THREE.Mesh(
+    new THREE.PlaneGeometry(1, 1),
+    material
 );
+// plane.position.x = 1
+const torus = new THREE.Mesh(
+    new THREE.TorusGeometry(.3, .2, 16, 32),
+    material
+)
+torus.position.x = 1.5
+scene.add(sphere, plane, torus);
 
-scene.add(mesh);
 
 
-
-const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, .1, 1000);
+const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, .01, 1000);
 camera.position.x = .1,
     camera.position.z = 2,
 
@@ -138,10 +112,15 @@ window.addEventListener('dblclick', () => {
 
 
 renderer.setSize(sizes.width, sizes.height);
-
+const clock = new THREE.Clock();
 const tick = () => {
-
-
+    const elapseTime = clock.getElapsedTime();
+    sphere.rotation.y = .1 * elapseTime
+    plane.rotation.y = .1 * elapseTime
+    torus.rotation.y = .1 * elapseTime
+    sphere.rotation.x = .15 * elapseTime
+    plane.rotation.x = .15 * elapseTime
+    torus.rotation.x = .15 * elapseTime
     controls.update();
     renderer.render(scene, camera);
     window.requestAnimationFrame(tick)
