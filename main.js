@@ -6,14 +6,21 @@ import * as dat from "dat.gui"
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 const canvas = document.querySelector('canvas.webgl');
 const image = new Image();
-const texture = new THREE.Texture(image);
 
+
+/*
+//behind the scence of the texture loader
+const texture = new THREE.Texture(image);
 image.onload = () => {
     console.log('hey');
     texture.needsUpdate = true
 }
 console.log(texture);
-image.src = "./static/images/color.jpg"
+image.src = "./static/images/color.jpg" */
+
+
+const textureleLoader = new THREE.TextureLoader();
+const texture = textureleLoader.load("./static/images/color.jpg")
 console.log(image);
 const Configuracion = function () {
     this.color = "#ff0000",
