@@ -13,7 +13,7 @@ image.onload = () => {
     texture.needsUpdate = true
 }
 console.log(texture);
-image.src = "public/static/images/color.jpg"
+image.src = "./static/images/color.jpg"
 console.log(image);
 const Configuracion = function () {
     this.color = "#ff0000",
