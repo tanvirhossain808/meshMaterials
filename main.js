@@ -2,7 +2,7 @@ import "./style.css"
 import gsap from 'gsap';
 import * as THREE from 'three';
 import * as dat from "dat.gui"
-import imgcolor from "./static/color.jpg"
+// import imgcolor from "./static/color.jpg"
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 const canvas = document.querySelector('canvas.webgl');
 const image = new Image();
@@ -13,7 +13,7 @@ image.onload = () => {
     texture.needsUpdate = true
 }
 console.log(texture);
-image.src = "./static/color.jpg"
+image.src = "./static/images/color.jpg"
 console.log(image);
 const Configuracion = function () {
     this.color = "#ff0000",
